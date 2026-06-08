@@ -1,28 +1,30 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
   /* Surfaces */
-  --bg:          #f4f6fb;
+  --bg:          #f0f4f8;
   --bg-card:     #ffffff;
-  --bg-input:    #f0f3f9;
+  --bg-input:    #f7f9fc;
   --bg-hover:    #e8ecf5;
   --bg-user-msg: #eef3ff;
 
   /* Borders */
-  --border:      #e4e8f0;
-  --border-mid:  #ccd2df;
+  --border:      #e2e8f0;
+  --border-mid:  #cbd5e1;
 
-  /* Brand */
-  --accent:      #2563eb;
-  --accent-dim:  #dbeafe;
-  --accent-text: #1d4ed8;
+  /* Brand — MUNISYS */
+  --accent:           #2B6CB0;
+  --accent-dim:       #e8f0f8;
+  --accent-text:      #1a4f8a;
+  --accent-secondary: #8B2252;
+  --accent-sec-dim:   #f5eaf1;
 
   /* Text */
-  --text-1:      #111827;
-  --text-2:      #4b5563;
-  --text-3:      #9ca3af;
+  --text-1:      #0f172a;
+  --text-2:      #475569;
+  --text-3:      #94a3b8;
 
   /* Semantic */
   --green:       #16a34a;
@@ -31,13 +33,13 @@
   --red:         #dc2626;
 
   /* Elevation */
-  --shadow-xs:   0 1px 2px rgba(0,0,0,.05);
-  --shadow-sm:   0 1px 4px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.04);
-  --shadow:      0 4px 16px rgba(0,0,0,.07);
-  --shadow-lg:   0 8px 32px rgba(0,0,0,.10);
+  --shadow-xs:   0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-sm:   0 2px 6px rgba(0,0,0,.06), 0 1px 3px rgba(0,0,0,.04);
+  --shadow:      0 4px 20px rgba(0,0,0,.08);
+  --shadow-lg:   0 10px 40px rgba(0,0,0,.12);
 
   /* Typography */
-  --font:        'Inter', sans-serif;
+  --font:        'Plus Jakarta Sans', sans-serif;
   --mono:        'JetBrains Mono', monospace;
 
   /* Shape */
@@ -58,3 +60,8 @@ html, body, #root {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border-mid); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #a0a9bb; }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

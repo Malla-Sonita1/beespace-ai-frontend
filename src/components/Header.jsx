@@ -9,39 +9,54 @@ export default function Header() {
   return (
     <div style={{
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      padding: '0 24px', height: 56,
-      borderBottom: '1px solid var(--border)',
+      padding: '0 24px', height: 58,
+      borderBottom: '1px solid transparent',
+      borderImage: 'linear-gradient(90deg, var(--accent) 0%, var(--border) 40%) 1',
       background: 'var(--bg-card)',
       boxShadow: 'var(--shadow-xs)',
       flexShrink: 0, zIndex: 10,
     }}>
-      {/* Logo */}
+
+      {/* Logo group — Beebot + séparateur + MUNISYS */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
         <div style={{
           width: 30, height: 30, borderRadius: 9,
-          background: 'var(--accent)', display: 'flex',
-          alignItems: 'center', justifyContent: 'center',
-          fontSize: 13, fontWeight: 700, color: '#fff',
-          boxShadow: '0 2px 6px rgba(37,99,235,.3)',
-        }}>B</div>
-        <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-1)' }}>
-          BeeSpace AI
+          background: 'linear-gradient(135deg, #2B6CB0, #1a4f8a)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: 16, boxShadow: '0 2px 6px rgba(43,108,176,.3)',
+        }}>🐝</div>
+        <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-1)' }}>
+          Beebot
         </span>
         <span style={{
-          fontSize: 10, padding: '2px 7px', borderRadius: 5,
-          background: 'var(--accent-dim)', color: 'var(--accent-text)',
-          border: '1px solid rgba(37,99,235,.2)',
+          fontSize: 10, padding: '2px 8px', borderRadius: 12,
+          background: '#E8F4FD', color: '#2B6CB0',
           fontFamily: 'var(--mono)', fontWeight: 500,
-        }}>POC</span>
+        }}>beta</span>
+
+        {/* Séparateur vertical */}
+        <span style={{
+          color: '#CBD5E1', fontSize: 16, fontWeight: 300,
+          marginLeft: 4, marginRight: 4, userSelect: 'none',
+        }}>|</span>
+
+        {/* MUNISYS */}
+        <span style={{
+          fontSize: 16, fontWeight: 700, color: '#1E3A5F',
+          letterSpacing: '.02em',
+        }}>
+          MUNISYS
+        </span>
       </div>
 
-      {/* User */}
+      {/* User + déconnexion */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
         <div style={{
           width: 32, height: 32, borderRadius: '50%',
-          background: 'var(--accent-dim)', border: '1px solid rgba(37,99,235,.2)',
+          background: 'linear-gradient(135deg, #2B6CB0, #1a4f8a)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 12, fontWeight: 600, color: 'var(--accent)',
+          fontSize: 12, fontWeight: 600, color: '#fff',
+          boxShadow: '0 2px 6px rgba(43,108,176,.3)',
         }}>
           {initials}
         </div>
@@ -51,21 +66,13 @@ export default function Header() {
         <button
           onClick={logout}
           style={{
-            background: 'transparent', border: '1px solid var(--border)',
-            borderRadius: 8, padding: '5px 12px', cursor: 'pointer',
-            fontSize: 12, color: 'var(--text-2)', fontFamily: 'var(--font)',
-            fontWeight: 500, transition: 'all .15s',
+            background: 'transparent', border: 'none',
+            padding: '5px 0', cursor: 'pointer',
+            fontSize: 12, color: '#94A3B8', fontFamily: 'var(--font)',
+            fontWeight: 400, transition: 'color .15s',
           }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.color = 'var(--red)'
-            e.currentTarget.style.borderColor = 'var(--red)'
-            e.currentTarget.style.background = '#fff5f5'
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.color = 'var(--text-2)'
-            e.currentTarget.style.borderColor = 'var(--border)'
-            e.currentTarget.style.background = 'transparent'
-          }}
+          onMouseEnter={(e) => { e.currentTarget.style.color = '#64748B' }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = '#94A3B8' }}
         >
           Déconnexion
         </button>

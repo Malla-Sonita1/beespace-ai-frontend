@@ -44,7 +44,7 @@ export default function ChatInput({ onSend, loading }) {
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Posez une question sur vos projets, facturation, ressources..."
+          placeholder="Posez votre question à Beebot..."
           rows={1}
           style={{
             flex: 1, background: 'transparent', border: 'none',
@@ -59,7 +59,7 @@ export default function ChatInput({ onSend, loading }) {
           }}
           onFocus={(e) => {
             e.target.closest('div').style.borderColor = 'var(--accent)'
-            e.target.closest('div').style.boxShadow = '0 0 0 3px rgba(37,99,235,.1)'
+            e.target.closest('div').style.boxShadow = '0 0 0 3px rgba(43,108,176,.1)'
           }}
           onBlur={(e) => {
             e.target.closest('div').style.borderColor = 'var(--border)'
@@ -71,14 +71,24 @@ export default function ChatInput({ onSend, loading }) {
           disabled={!canSend}
           style={{
             width: 36, height: 36, borderRadius: 10, border: 'none',
-            background: canSend ? 'var(--accent)' : 'var(--bg-hover)',
+            background: canSend
+              ? 'linear-gradient(135deg, #2B6CB0, #1a4f8a)'
+              : 'var(--bg-hover)',
             cursor: canSend ? 'pointer' : 'not-allowed',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            flexShrink: 0, transition: 'background .15s, transform .1s',
-            boxShadow: canSend ? '0 2px 6px rgba(37,99,235,.3)' : 'none',
+            flexShrink: 0, transition: 'background .15s, transform .1s, box-shadow .15s',
+            boxShadow: canSend ? '0 2px 8px rgba(43,108,176,.35)' : 'none',
           }}
-          onMouseEnter={(e) => { if (canSend) e.currentTarget.style.transform = 'scale(1.05)' }}
-          onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)' }}
+          onMouseEnter={(e) => {
+            if (canSend) {
+              e.currentTarget.style.transform = 'scale(1.07)'
+              e.currentTarget.style.boxShadow = '0 4px 16px rgba(43,108,176,.45)'
+            }
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'scale(1)'
+            if (canSend) e.currentTarget.style.boxShadow = '0 2px 8px rgba(43,108,176,.35)'
+          }}
         >
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
             <path d="M22 2L11 13" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>

@@ -115,10 +115,14 @@ function SessionItem({ s, isActive, onSelect, onRenamed, onDeleted }) {
         style={{
           width: '100%', textAlign: 'left',
           display: 'flex', flexDirection: 'column', gap: 3,
-          padding: editing ? '6px 10px' : '8px 30px 8px 10px', borderRadius: 8, border: 'none',
+          padding: editing ? '6px 10px' : isActive ? '8px 30px 8px 13px' : '8px 30px 8px 13px',
+          borderRadius: 8, border: 'none',
+          borderLeft: isActive || hovered ? '3px solid #2B6CB0' : '3px solid transparent',
           cursor: editing ? 'default' : 'pointer', fontFamily: 'var(--font)',
-          background: isActive ? 'var(--accent-dim)' : hovered ? 'var(--bg-card)' : 'transparent',
-          transition: 'background .12s',
+          background: isActive
+            ? '#EBF5FF'
+            : hovered ? '#F1F5F9' : 'transparent',
+          transition: 'background .12s, border-color .12s',
         }}
       >
         {editing ? (
@@ -291,16 +295,24 @@ export default function SessionSidebar({ sessions, currentSessionId, onNewChat, 
           <button
             onClick={onNewChat}
             style={{
-              flex: 1, display: 'flex', alignItems: 'center', gap: 6,
-              padding: '6px 10px', borderRadius: 7,
-              border: '1px dashed var(--border-mid)',
-              background: 'transparent', cursor: 'pointer',
-              fontSize: 12, fontWeight: 500, color: 'var(--text-2)',
-              fontFamily: 'var(--font)', transition: 'all .15s',
+              flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+              padding: '10px 16px', borderRadius: 10,
+              border: 'none',
+              background: 'linear-gradient(135deg, #2B6CB0, #1a4f8a)',
+              cursor: 'pointer',
+              fontSize: 12, fontWeight: 600, color: '#fff',
+              fontFamily: 'var(--font)', transition: 'opacity .15s, box-shadow .15s',
               whiteSpace: 'nowrap',
+              boxShadow: '0 2px 6px rgba(43,108,176,.25)',
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)'; e.currentTarget.style.background = 'var(--accent-dim)' }}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border-mid)'; e.currentTarget.style.color = 'var(--text-2)'; e.currentTarget.style.background = 'transparent' }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.opacity = '.92'
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(43,108,176,.35)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.opacity = '1'
+              e.currentTarget.style.boxShadow = '0 2px 6px rgba(43,108,176,.25)'
+            }}
           >
             <IconPlus /> Nouveau chat
           </button>
@@ -310,7 +322,11 @@ export default function SessionSidebar({ sessions, currentSessionId, onNewChat, 
       {isOpen && (
         <>
           {sessions.length > 0 && (
-            <div style={{ padding: '2px 14px 6px', fontSize: 10, fontWeight: 600, color: 'var(--text-3)', letterSpacing: '.06em', textTransform: 'uppercase' }}>
+            <div style={{
+              fontSize: 11, fontWeight: 600, color: '#94A3B8',
+              letterSpacing: '1px', textTransform: 'uppercase',
+              margin: '16px 0 8px 16px',
+            }}>
               Historique
             </div>
           )}

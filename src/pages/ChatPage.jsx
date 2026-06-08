@@ -4,7 +4,6 @@ import MessageList from '../components/MessageList'
 import ChatInput from '../components/ChatInput'
 import SessionSidebar from '../components/SessionSidebar'
 import { sendMessage, getSessions, getSessionMessages } from '../services/api'
-import { useAuth } from '../context/AuthContext'
 
 function timestamp(ts) {
   if (ts) {
@@ -19,7 +18,6 @@ let msgId = 0
 const newId = () => ++msgId
 
 export default function ChatPage() {
-  const { token } = useAuth()
   const [messages, setMessages] = useState([])
   const [loading, setLoading] = useState(false)
   const [sessionId, setSessionId] = useState(null)
@@ -66,17 +64,27 @@ export default function ChatPage() {
   }, [])
 
   const appendAssistantMsg = (data) => {
+    // BUG #3 fix: mapper duration_ms → debug avec les noms attendus par DebugInfo
+    const dm = data.duration_ms || {}
     const msg = {
       id: newId(),
       role: 'assistant',
       content: data.answer,
       intention: data.intention,
-      clarification: data.clarification_needed,
-      debug: data.debug,
+      clarification_needed: data.clarification_needed,
+      debug: {
+        cached:       data.cached || false,
+        nlu_ms:       dm.nlu,
+        api_ms:       dm.api,
+        analyzer_ms:  dm.analyzer,
+        gen_ms:       dm.generator,
+        total_ms:     dm.total,
+      },
       time: timestamp(),
-      has_more: data.has_more || false,
+      has_more:    data.has_more || false,
+      message_id: data.message_id || null,
+      session_id: data.session_id || sessionId,
       next_offset: data.next_offset || 0,
-      total_items: data.total_items || 0,
     }
     setMessages((prev) => [...prev, msg])
     return msg
@@ -90,7 +98,7 @@ export default function ChatPage() {
     const history = messages.slice(-6).map((m) => ({ role: m.role, content: m.content }))
 
     try {
-      const data = await sendMessage(text, history, token, 0, sessionId)
+      const data = await sendMessage(text, history, 0, sessionId)
       if (data.session_id && !sessionId) setSessionId(data.session_id)
       appendAssistantMsg(data)
       // Rafraîchit le sidebar (en arrière-plan, pas d'await)
@@ -104,17 +112,27 @@ export default function ChatPage() {
     } finally {
       setLoading(false)
     }
-  }, [messages, token, sessionId, loadSessions])
+  }, [messages, sessionId, loadSessions])
 
   const handleShowMore = useCallback(async (nextOffset) => {
-    const lastUserMsg = [...messages].reverse().find((m) => m.role === 'user')
+    let lastUserMsg = null
+    for (let i = messages.length - 1; i >= 0; i--) {
+      if (messages[i].role === 'user') {
+        const prevMsg = i > 0 ? messages[i - 1] : null
+        if (prevMsg && prevMsg.role === 'assistant' && prevMsg.clarification_needed) {
+          continue
+        }
+        lastUserMsg = messages[i]
+        break
+      }
+    }
     if (!lastUserMsg) return
 
     setLoading(true)
     const history = messages.slice(-6).map((m) => ({ role: m.role, content: m.content }))
 
     try {
-      const data = await sendMessage(lastUserMsg.content, history, token, nextOffset, sessionId)
+      const data = await sendMessage(lastUserMsg.content, history, nextOffset, sessionId)
       appendAssistantMsg(data)
     } catch (err) {
       setMessages((prev) => [...prev, {
@@ -124,7 +142,7 @@ export default function ChatPage() {
     } finally {
       setLoading(false)
     }
-  }, [messages, token, sessionId])
+  }, [messages, sessionId])
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
