@@ -1,16 +1,71 @@
-# React + Vite
+# BeeBot Frontend — Chat Interface
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React chat interface for BeeBot, the AI conversational assistant for BeeSpace ERP.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React 18
+- Vite
+- JavaScript (JSX)
 
-## React Compiler
+## Prerequisites
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Node.js 18+
+- npm
 
-## Expanding the ESLint configuration
+## Installation
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+# 1. Clone and enter the project
+git clone https://github.com/Malla-Sonita1/beespace-ai-frontend.git
+cd beespace-ai-frontend
+
+# 2. Install dependencies
+npm install
+
+# 3. Launch development server
+npm run dev
+# Opens on http://localhost:5173
+```
+
+## Backend Connection
+
+The frontend connects to the BeeBot backend at `http://localhost:8000`. CORS is configured for ports 3000 and 5173.
+
+Make sure the backend is running before using the frontend:
+```bash
+# In the backend repo (BeeBot-ai-assistant)
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+## Structure
+
+```
+src/
+├── pages/
+│   └── ChatPage.jsx           # Main chat page
+├── components/
+│   ├── Header.jsx             # App header with MUNISYS logo
+│   ├── MessageList.jsx        # Message display + feedback buttons
+│   └── SessionSidebar.jsx     # Session list sidebar
+└── vite.config.js
+```
+
+## Features
+
+- Chat interface with conversation history
+- Session management (create, rename, delete)
+- Pagination "Voir la suite" for long result lists
+- Star rating (1-5) per message
+- Entity clarification buttons (interactive choice/confirmation)
+- Copy button with clipboard feedback
+
+## Design
+
+- MUNISYS brand colors: steel blue (#2B6CB0), bordeaux (#8B2252)
+- Font: Plus Jakarta Sans
+- MUNISYS logo in header
+
+## Related
+
+- Backend: [BeeBot-ai-assistant](https://github.com/Malla-Sonita1/BeeBot-ai-assistant) (branch `feature/rag-poc`)
