@@ -65,3 +65,12 @@ export const checkHealth = async () => {
   const res = await api.get('/health')
   return res.data
 }
+
+export const rateMessage = async (sessionId, messageId, rating) => {
+  const res = await api.post('/chat/rate', {
+    session_id: sessionId,
+    message_id: messageId,
+    rating,
+  })
+  return res.data
+}

@@ -1,0 +1,90 @@
+.chat-input {
+  padding: 12px 24px 18px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-card);
+  flex-shrink: 0;
+}
+
+.chat-input__composer {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 6px 10px 6px 14px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: var(--shadow-xs);
+  cursor: text;
+}
+
+.chat-input__composer:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(43, 108, 176, 0.1);
+}
+
+.chat-input__textarea.ant-input {
+  flex: 1;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  resize: none;
+  color: var(--text-1);
+  font-size: 14px;
+  font-family: var(--font);
+  line-height: 1.6;
+  max-height: 120px;
+  overflow-y: auto !important;
+  padding: 4px 0;
+}
+
+.chat-input__textarea.ant-input:focus {
+  box-shadow: none !important;
+}
+
+.chat-input__send.ant-btn {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  padding: 0;
+  border-radius: 10px;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.1s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.chat-input__send--active.ant-btn-primary {
+  background: linear-gradient(135deg, #2b6cb0, #1a4f8a);
+  box-shadow: 0 2px 8px rgba(43, 108, 176, 0.35);
+}
+
+.chat-input__send--active.ant-btn-primary:hover,
+.chat-input__send--active.ant-btn-primary:focus {
+  background: linear-gradient(135deg, #1a4f8a, #164070);
+  transform: scale(1.07);
+  box-shadow: 0 4px 16px rgba(43, 108, 176, 0.45);
+}
+
+.chat-input__send--idle.ant-btn {
+  background: var(--bg-hover);
+  color: var(--text-3);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.chat-input__hint {
+  display: block;
+  font-size: 11px;
+  color: var(--text-3);
+  margin-top: 7px;
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .chat-input {
+    padding: 10px 16px 14px;
+  }
+}

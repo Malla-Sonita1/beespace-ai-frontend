@@ -1,0 +1,45 @@
+/**
+ * Migré Ant Design 4.15.6 — BeeSpace UI
+ * Personnalisation Ant Design 4.15 — couleur primaire BeeSpace (#2B6CB0).
+ * Ant Design 4 ne supporte pas ConfigProvider.theme (réservé à v5+).
+ */
+
+.beespace-app-root {
+  --beespace-primary: #2b6cb0;
+  --beespace-primary-dark: #1a4f8a;
+  --beespace-radius-md: 10px;
+  height: 100%;
+}
+
+.ant-btn-primary,
+.ant-btn-primary:hover,
+.ant-btn-primary:focus {
+  background: #2B6CB0;
+  border-color: #2B6CB0;
+}
+
+.ant-btn-primary:hover,
+.ant-btn-primary:focus {
+  background: #1a4f8a;
+  border-color: #1a4f8a;
+}
+
+.ant-btn-primary:active {
+  background: #164070;
+  border-color: #164070;
+}
+
+.ant-btn-link,
+.ant-btn-link:hover {
+  color: #2B6CB0;
+}
+
+.ant-tag {
+  border-radius: 6px;
+}
+
+.ant-rate-star-full .ant-rate-star-second,
+.ant-rate-star-full .ant-rate-star-first,
+.ant-rate-star-half .ant-rate-star-first {
+  color: #FFB800;
+}

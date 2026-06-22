@@ -1,13 +1,18 @@
+/**
+ * Migré Ant Design 4.15.6 — BeeSpace UI
+ * Page principale du chat : sidebar, messages, saisie.
+ */
 import { useState, useCallback, useEffect } from 'react'
-import Header from '../components/Header'
-import MessageList from '../components/MessageList'
-import ChatInput from '../components/ChatInput'
-import SessionSidebar from '../components/SessionSidebar'
+import { Button } from 'antd'
+import Header from '../components/layout/Header'
+import MessageList from '../components/chat/MessageList'
+import ChatInput from '../components/chat/ChatInput'
+import SessionSidebar from '../components/layout/SessionSidebar'
 import { sendMessage, getSessions, getSessionMessages } from '../services/api'
+import './ChatPage.css'
 
 function timestamp(ts) {
   if (ts) {
-    // Format SQLite "2026-04-23 15:25:00" → "15:25"
     const match = ts.match(/(\d{2}:\d{2})/)
     return match ? match[1] : ts
   }
@@ -24,19 +29,17 @@ export default function ChatPage() {
   const [sessions, setSessions] = useState([])
   const [sidebarOpen, setSidebarOpen] = useState(true)
 
-  // Charge la liste des sessions au montage et après chaque message
   const loadSessions = useCallback(async () => {
     try {
       const data = await getSessions()
       setSessions(data)
     } catch {
-      // silencieux si non connecté ou serveur indispo
+      /* silencieux si non connecté ou serveur indispo */
     }
   }, [])
 
   useEffect(() => { loadSessions() }, [loadSessions])
 
-  // Charge les messages d'une session existante
   const handleSelectSession = useCallback(async (sid) => {
     if (sid === sessionId) return
     try {
@@ -54,7 +57,7 @@ export default function ChatPage() {
       setMessages(loaded)
       setSessionId(sid)
     } catch {
-      // session inaccessible
+      /* session inaccessible */
     }
   }, [sessionId])
 
@@ -64,7 +67,6 @@ export default function ChatPage() {
   }, [])
 
   const appendAssistantMsg = (data) => {
-    // BUG #3 fix: mapper duration_ms → debug avec les noms attendus par DebugInfo
     const dm = data.duration_ms || {}
     const msg = {
       id: newId(),
@@ -73,15 +75,15 @@ export default function ChatPage() {
       intention: data.intention,
       clarification_needed: data.clarification_needed,
       debug: {
-        cached:       data.cached || false,
-        nlu_ms:       dm.nlu,
-        api_ms:       dm.api,
-        analyzer_ms:  dm.analyzer,
-        gen_ms:       dm.generator,
-        total_ms:     dm.total,
+        cached: data.cached || false,
+        nlu_ms: dm.nlu,
+        api_ms: dm.api,
+        analyzer_ms: dm.analyzer,
+        gen_ms: dm.generator,
+        total_ms: dm.total,
       },
       time: timestamp(),
-      has_more:    data.has_more || false,
+      has_more: data.has_more || false,
       message_id: data.message_id || null,
       session_id: data.session_id || sessionId,
       next_offset: data.next_offset || 0,
@@ -101,7 +103,6 @@ export default function ChatPage() {
       const data = await sendMessage(text, history, 0, sessionId)
       if (data.session_id && !sessionId) setSessionId(data.session_id)
       appendAssistantMsg(data)
-      // Rafraîchit le sidebar (en arrière-plan, pas d'await)
       loadSessions()
     } catch (err) {
       setMessages((prev) => [...prev, {
@@ -134,7 +135,7 @@ export default function ChatPage() {
     try {
       const data = await sendMessage(lastUserMsg.content, history, nextOffset, sessionId)
       appendAssistantMsg(data)
-    } catch (err) {
+    } catch {
       setMessages((prev) => [...prev, {
         id: newId(), role: 'assistant', time: timestamp(),
         content: 'Erreur lors du chargement des éléments suivants.',
@@ -145,10 +146,10 @@ export default function ChatPage() {
   }, [messages, sessionId])
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+    <div className="chat-page">
       <Header />
 
-      <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+      <div className="chat-page__body">
         <SessionSidebar
           sessions={sessions}
           currentSessionId={sessionId}
@@ -159,23 +160,16 @@ export default function ChatPage() {
           onToggle={() => setSidebarOpen((o) => !o)}
         />
 
-        <div style={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
+        <div className="chat-page__main">
           {messages.length > 0 && (
-            <div style={{
-              padding: '6px 24px', borderBottom: '1px solid var(--border)',
-              display: 'flex', justifyContent: 'flex-end',
-              background: 'var(--bg-card)',
-            }}>
-              <button onClick={handleNewChat} style={{
-                background: 'transparent', border: 'none', cursor: 'pointer',
-                fontSize: 12, color: 'var(--text-3)', fontFamily: 'var(--font)',
-                transition: 'color .15s',
-              }}
-                onMouseEnter={(e) => e.target.style.color = 'var(--text-2)'}
-                onMouseLeave={(e) => e.target.style.color = 'var(--text-3)'}
+            <div className="chat-page__toolbar">
+              <Button
+                type="link"
+                className="chat-page__new-chat"
+                onClick={handleNewChat}
               >
                 Nouvelle conversation
-              </button>
+              </Button>
             </div>
           )}
 
