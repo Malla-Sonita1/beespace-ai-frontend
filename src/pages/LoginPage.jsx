@@ -20,7 +20,7 @@ const { Title, Text, Paragraph } = Typography
 const { TabPane } = Tabs
 
 export default function LoginPage() {
-  const { login, loginWithToken } = useAuth()
+  const { login, loginWithToken, isAuthenticated } = useAuth()
   const [credentialsForm] = Form.useForm()
   const [tokenForm] = Form.useForm()
   const [activeTab, setActiveTab] = useState('credentials')
@@ -52,6 +52,10 @@ export default function LoginPage() {
   const handleTabChange = (key) => {
     setActiveTab(key)
     setError('')
+  }
+
+  if (isAuthenticated) {
+    return null
   }
 
   return (

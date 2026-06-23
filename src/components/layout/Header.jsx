@@ -22,6 +22,8 @@ export default function Header() {
     ? `${user.prenom} ${user.nom}`
     : user?.username || 'Utilisateur'
 
+  const roleLabel = user?.roles?.[0] || user?.role || null
+
   return (
     <AntHeader className="app-header">
       <Space size={10} align="center" className="app-header__brand">
@@ -37,6 +39,9 @@ export default function Header() {
           {initials}
         </Avatar>
         <Text className="app-header__username">{displayName}</Text>
+        {roleLabel && (
+          <Tag className="app-header__role">{roleLabel}</Tag>
+        )}
         <Button
           type="link"
           className="app-header__logout"

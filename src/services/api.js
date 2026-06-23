@@ -1,36 +1,57 @@
 import axios from 'axios'
 
+export const TOKEN_KEY = 'bs_token'
+export const USER_KEY = 'bs_user'
+
+const BEESPACE_AUTH_URL =
+  import.meta.env.VITE_BEESPACE_URL || 'http://172.17.1.110:8080/beespace_dev_api'
+
 const api = axios.create({ baseURL: '/api' })
 
-// BUG #1 fix: lire depuis localStorage (le token BeeSpace y est stocké)
+let unauthorizedHandler = null
+
+/** Enregistré par AuthContext pour synchroniser l'état React sur 401. */
+export function setUnauthorizedHandler(handler) {
+  unauthorizedHandler = handler
+}
+
+function clearStoredAuth() {
+  localStorage.removeItem(TOKEN_KEY)
+  localStorage.removeItem(USER_KEY)
+}
+
+function getStoredToken() {
+  return localStorage.getItem(TOKEN_KEY)
+}
+
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('bs_token')
-  if (token) config.headers.Authorization = `Bearer ${token}`
+  const token = getStoredToken()
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
   return config
 })
 
-// BUG #6 fix: intercepteur réponse → 401 clear + redirect login
 api.interceptors.response.use(
   (res) => res,
   (err) => {
     if (err.response?.status === 401) {
-      localStorage.removeItem('bs_token')
-      localStorage.removeItem('bs_user')
-      window.location.href = '/login'
+      clearStoredAuth()
+      unauthorizedHandler?.()
     }
     return Promise.reject(err)
   }
 )
 
+/** Authentification BeeSpace — appel direct (hors proxy /api). */
 export const login = async (username, password) => {
-  const res = await axios.post(
-    `${import.meta.env.VITE_BEESPACE_URL || 'http://172.17.1.110:8080/beespace_dev_api'}/auth/login`,
-    { username, password }
-  )
-  return res.data // { token, user: { nom, prenom, roles } }
+  const res = await axios.post(`${BEESPACE_AUTH_URL}/auth/login`, {
+    username,
+    password,
+  })
+  return res.data
 }
 
-// BUG #2 fix: "offset" (pas "list_offset") — BUG #7 fix: pas de user_jwt dans le body
 export const sendMessage = async (message, history, offset = 0, sessionId = null) => {
   const res = await api.post('/chat', {
     message,
@@ -74,3 +95,5 @@ export const rateMessage = async (sessionId, messageId, rating) => {
   })
   return res.data
 }
+
+export default api

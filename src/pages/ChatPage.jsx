@@ -8,6 +8,7 @@ import Header from '../components/layout/Header'
 import MessageList from '../components/chat/MessageList'
 import ChatInput from '../components/chat/ChatInput'
 import SessionSidebar from '../components/layout/SessionSidebar'
+import { useAuth } from '../context/AuthContext'
 import { sendMessage, getSessions, getSessionMessages } from '../services/api'
 import './ChatPage.css'
 
@@ -23,6 +24,7 @@ let msgId = 0
 const newId = () => ++msgId
 
 export default function ChatPage() {
+  const { isAuthenticated } = useAuth()
   const [messages, setMessages] = useState([])
   const [loading, setLoading] = useState(false)
   const [sessionId, setSessionId] = useState(null)
@@ -38,7 +40,11 @@ export default function ChatPage() {
     }
   }, [])
 
-  useEffect(() => { loadSessions() }, [loadSessions])
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadSessions()
+    }
+  }, [isAuthenticated, loadSessions])
 
   const handleSelectSession = useCallback(async (sid) => {
     if (sid === sessionId) return
@@ -144,6 +150,10 @@ export default function ChatPage() {
       setLoading(false)
     }
   }, [messages, sessionId])
+
+  if (!isAuthenticated) {
+    return null
+  }
 
   return (
     <div className="chat-page">
